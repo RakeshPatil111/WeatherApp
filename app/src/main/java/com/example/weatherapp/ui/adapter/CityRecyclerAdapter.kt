@@ -40,6 +40,10 @@ class CityRecyclerAdapter :
         onItemClickListener = listener
     }
 
+    fun updateList(list: List<WeatherModel>?) {
+        submitList(list)
+    }
+
     inner class CityViewHolder(var view: ItemWeatherBinding) : RecyclerView.ViewHolder(view.root)
 
     /* override fun getFilter(): Filter {

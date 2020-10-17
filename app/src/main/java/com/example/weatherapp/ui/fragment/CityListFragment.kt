@@ -94,6 +94,7 @@ class CityListFragment : Fragment() {
                         viewModel.getCityByName(editable.toString()).observe(viewLifecycleOwner,
                             Observer {
                                 if (it.isNotEmpty()) {
+                                    binding.rvCity.removeAllViewsInLayout()
                                     cityAdapter.submitList(it)
                                 } else {
                                     viewModel.getWeather(editable.toString())
@@ -121,7 +122,6 @@ class CityListFragment : Fragment() {
             when (response) {
                 is Resource.Success -> {
                     response.data?.let { weatherResponse ->
-
                         weather = WeatherModel(
                             weatherResponse.name,
                             weatherResponse.weather.get(0).description,
