@@ -9,22 +9,19 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitClient {
     companion object {
-        private val retrofitClient by lazy {
+        fun create(): WeatherAPI {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .build()
-            Retrofit.Builder()
+            return Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        }
-
-        val api by lazy {
-            retrofitClient.create(WeatherAPI::class.java)
+                .create(WeatherAPI::class.java)
         }
     }
 }

@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,16 +20,15 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 
-class MainViewModel(val repository: WeatherRepository, application: Application) :
+class MainViewModel @ViewModelInject constructor(
+    val repository: WeatherRepository,
+    application: Application
+) :
     AndroidViewModel(application) {
 
     val weatherLiveData: MutableLiveData<Resource<Weather>> = MutableLiveData()
     var weatherResponse: Weather? = null
-    var localWeatherLiveData: LiveData<List<WeatherModel>>
-
-    init {
-        localWeatherLiveData = repository.getAllLocalWeather()
-    }
+    var localWeatherLiveData: LiveData<List<WeatherModel>> = repository.getAllLocalWeather()
 
     fun upsertWeather(weather: WeatherModel) = viewModelScope.launch {
         repository.upsertWeather(weather)

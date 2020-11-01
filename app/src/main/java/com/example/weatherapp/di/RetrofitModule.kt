@@ -12,5 +12,5 @@ import javax.inject.Singleton
 object RetrofitModule {
     @Singleton
     @Provides
-    fun providesWeatherService() = RetrofitClient.api
+    fun providesWeatherService() = RetrofitClient.create()
 }

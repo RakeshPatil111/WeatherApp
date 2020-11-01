@@ -6,6 +6,8 @@ import java.io.Serializable
 
 @Entity
 data class WeatherModel(
+    @PrimaryKey(autoGenerate = true)
+    var id: Long,
     val cityName: String,
     val description: String,
     val icon: String,
@@ -15,7 +17,4 @@ data class WeatherModel(
     val humidity: Int,
     val feelsLike: Double,
     val createdAt: Long
-) : Serializable {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-}
+) : Serializable

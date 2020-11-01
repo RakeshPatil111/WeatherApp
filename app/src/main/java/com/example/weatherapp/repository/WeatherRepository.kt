@@ -1,18 +1,22 @@
 package com.example.weatherapp.repository
 
 import com.example.weatherapp.model.WeatherModel
-import com.example.weatherapp.repository.db.WeatherDb
-import com.example.weatherapp.repository.service.RetrofitClient
+import com.example.weatherapp.repository.db.WeatherDAO
+import com.example.weatherapp.repository.service.WeatherAPI
 import com.example.weatherapp.util.Constant
+import javax.inject.Inject
 
-class WeatherRepository(val db: WeatherDb) {
+class WeatherRepository @Inject constructor(
+    private val apiService: WeatherAPI,
+    private val dao: WeatherDAO
+) {
 
     suspend fun getWeather(cityName: String) =
-        RetrofitClient.api.getWeather(cityName, Constant.API_ID)
+        apiService.getWeather(cityName, Constant.API_ID)
 
-    suspend fun upsertWeather(weather: WeatherModel) = db.getDAO().upsertWeather(weather)
+    suspend fun upsertWeather(weather: WeatherModel) = dao.upsertWeather(weather)
 
-    fun getAllLocalWeather() = db.getDAO().getAllWeathersFromLocal()
+    fun getAllLocalWeather() = dao.getAllWeathersFromLocal()
 
-    fun getCityByName(cityName: String) = db.getDAO().getCityByName(cityName)
+    fun getCityByName(cityName: String) = dao.getCityByName(cityName)
 }

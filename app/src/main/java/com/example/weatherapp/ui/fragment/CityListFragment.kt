@@ -6,27 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentCityListBinding
 import com.example.weatherapp.model.WeatherModel
-import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.ui.adapter.CityRecyclerAdapter
 import com.example.weatherapp.ui.adapter.SearchViewAdapter
 import com.example.weatherapp.util.Constant
 import com.example.weatherapp.util.Resource
 import com.example.weatherapp.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_city_list.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CityListFragment : Fragment() {
 
-    lateinit var viewModel: MainViewModel
+    val viewModel: MainViewModel by viewModels()
     lateinit var searchCityAdapter: SearchViewAdapter
     lateinit var cityAdapter: CityRecyclerAdapter
     lateinit var weatherList: List<WeatherModel>
@@ -39,8 +41,6 @@ class CityListFragment : Fragment() {
         searchCityAdapter = SearchViewAdapter()
         cityAdapter = CityRecyclerAdapter()
         weatherList = listOf()
-        // Get View Model
-        viewModel = (activity as MainActivity).weatherViewModel
     }
 
     override fun onCreateView(
@@ -123,6 +123,7 @@ class CityListFragment : Fragment() {
                 is Resource.Success -> {
                     response.data?.let { weatherResponse ->
                         weather = WeatherModel(
+                            System.currentTimeMillis(),
                             weatherResponse.name,
                             weatherResponse.weather.get(0).description,
                             weatherResponse.weather.get(0).icon,
