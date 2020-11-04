@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.weatherapp.model.WeatherModel
 import com.example.weatherapp.util.Constant.DATABASE_NAME
 
-@Database(entities = [WeatherModel::class], version = 3, exportSchema = false)
+@Database(entities = [WeatherModel::class], version = 4, exportSchema = false)
 abstract class WeatherDb : RoomDatabase() {
     abstract fun getDAO(): WeatherDAO
 

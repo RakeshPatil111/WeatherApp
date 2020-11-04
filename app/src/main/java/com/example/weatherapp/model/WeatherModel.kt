@@ -6,7 +6,7 @@ import java.io.Serializable
 
 @Entity
 data class WeatherModel(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     var id: Long,
     val cityName: String,
     val description: String,
