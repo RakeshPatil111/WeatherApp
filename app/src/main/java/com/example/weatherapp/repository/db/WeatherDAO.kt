@@ -17,4 +17,7 @@ interface WeatherDAO {
 
     @Query("SELECT * FROM weathermodel WHERE cityName LIKE :cityName")
     fun getCityByName(cityName: String): LiveData<List<WeatherModel>>
+
+    @Query("DELETE FROM weathermodel")
+    fun deleteAllRows()
 }

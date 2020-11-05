@@ -19,4 +19,6 @@ class WeatherRepository @Inject constructor(
     fun getAllLocalWeather() = dao.getAllWeathersFromLocal()
 
     fun getCityByName(cityName: String) = dao.getCityByName(cityName)
+
+    fun deleteAll() = dao.deleteAllRows()
 }

@@ -11,14 +11,18 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.weatherapp.WeatherApplication
 import com.example.weatherapp.model.Weather
 import com.example.weatherapp.model.WeatherModel
 import com.example.weatherapp.repository.WeatherRepository
+import com.example.weatherapp.util.DbWorker
 import com.example.weatherapp.util.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class MainViewModel @ViewModelInject constructor(
     val repository: WeatherRepository,
@@ -28,7 +32,12 @@ class MainViewModel @ViewModelInject constructor(
 
     val weatherLiveData: MutableLiveData<Resource<Weather>> = MutableLiveData()
     var weatherResponse: Weather? = null
-    var localWeatherLiveData: LiveData<List<WeatherModel>> = repository.getAllLocalWeather()
+    var localWeatherLiveData: LiveData<List<WeatherModel>> = MutableLiveData()
+    val workManager = WorkManager.getInstance(application)
+
+    init {
+        localWeatherLiveData = repository.getAllLocalWeather()
+    }
 
     fun upsertWeather(weather: WeatherModel) = viewModelScope.launch {
         repository.upsertWeather(weather)
@@ -99,5 +108,10 @@ class MainViewModel @ViewModelInject constructor(
             }
         }
         return false
+    }
+
+    internal fun deleteData() {
+        val request = PeriodicWorkRequestBuilder<DbWorker>(24, TimeUnit.HOURS).build()
+        workManager.enqueue(request)
     }
 }

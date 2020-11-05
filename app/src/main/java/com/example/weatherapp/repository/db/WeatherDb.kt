@@ -25,6 +25,16 @@ abstract class WeatherDb : RoomDatabase() {
 
         private fun buildDatabase(context: Context): WeatherDb {
             return Room.databaseBuilder(context, WeatherDb::class.java, DATABASE_NAME)
+                /*.addCallback(
+                    object : RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            val request = PeriodicWorkRequestBuilder<DbWorker>(20,
+                                TimeUnit.SECONDS).build()
+                            WorkManager.getInstance(context).enqueue(request)
+                        }
+                    }
+                )*/
                 .fallbackToDestructiveMigration()
                 .build()
         }

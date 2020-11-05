@@ -10,4 +10,5 @@
     <string name="humidity">Humidity</string>
     <string name="pressure">Pressure</string>
     <string name="colon">\u8208</string>
+    <string name="no_items">Oops, you have not saved anything yet..!!</string>
 </resources>

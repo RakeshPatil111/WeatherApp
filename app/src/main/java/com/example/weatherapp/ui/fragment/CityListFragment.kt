@@ -31,7 +31,7 @@ class CityListFragment : Fragment() {
     val viewModel: MainViewModel by viewModels()
     lateinit var searchCityAdapter: SearchViewAdapter
     lateinit var cityAdapter: CityRecyclerAdapter
-    lateinit var weatherList: List<WeatherModel>
+    lateinit var weatherList: MutableList<WeatherModel>
     private lateinit var weather: WeatherModel
 
     private lateinit var binding: FragmentCityListBinding
@@ -40,7 +40,7 @@ class CityListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         searchCityAdapter = SearchViewAdapter()
         cityAdapter = CityRecyclerAdapter()
-        weatherList = listOf()
+        weatherList = mutableListOf()
     }
 
     override fun onCreateView(
@@ -152,8 +152,15 @@ class CityListFragment : Fragment() {
 
         viewModel.localWeatherLiveData.observe(viewLifecycleOwner, Observer { weatherResponseList ->
             if (weatherResponseList.isNotEmpty()) {
-                weatherList = weatherResponseList
+                weatherList = weatherResponseList as MutableList<WeatherModel>
                 cityAdapter.submitList(weatherList)
+                binding.layoutNoItems.visibility = View.GONE
+                binding.rvCity.visibility = View.VISIBLE
+            } else {
+                // no data
+                weatherList.clear()
+                binding.layoutNoItems.visibility = View.VISIBLE
+                binding.rvCity.visibility = View.GONE
             }
         })
     }
