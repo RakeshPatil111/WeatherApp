@@ -19,7 +19,6 @@ import com.example.weatherapp.util.Resource
 import com.example.weatherapp.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_city_list.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -32,9 +31,10 @@ class CityListFragment : Fragment() {
     lateinit var searchCityAdapter: SearchViewAdapter
     lateinit var cityAdapter: CityRecyclerAdapter
     lateinit var weatherList: MutableList<WeatherModel>
-    private lateinit var weather: WeatherModel
+    private var weather: WeatherModel? = null
 
-    private lateinit var binding: FragmentCityListBinding
+    private var _binding: FragmentCityListBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,11 +48,13 @@ class CityListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentCityListBinding.inflate(inflater, container, false)
+        _binding = FragmentCityListBinding.inflate(inflater, container, false)
 
         // set on click
         binding.cvSearchCity.setOnClickListener {
-            gotoDetailsFragment()
+            weather?.let {
+                gotoDetailsFragment(it)
+            }
         }
 
         //Observe Data Change
@@ -68,12 +70,11 @@ class CityListFragment : Fragment() {
         // set recycler view
         binding.rvCity.adapter = cityAdapter
         cityAdapter.setOnItemCLickListener {
-            weather = it
-            gotoDetailsFragment()
+            gotoDetailsFragment(it)
         }
     }
 
-    private fun gotoDetailsFragment() {
+    private fun gotoDetailsFragment(weather: WeatherModel) {
         val bundle = Bundle()
         bundle.putSerializable("weather", weather)
         findNavController().navigate(R.id.action_cityListFragment_to_detailsFragment, bundle)
@@ -85,7 +86,7 @@ class CityListFragment : Fragment() {
         // Add text change listener
         var searchJob: Job? = null
 
-        etCitySearch.addTextChangedListener { editable ->
+        binding.etCitySearch.addTextChangedListener { editable ->
             searchJob?.cancel()
             searchJob = MainScope().launch {
                 delay(Constant.SEARCH_TIME_DELAY)
@@ -104,7 +105,7 @@ class CityListFragment : Fragment() {
                     } else {
                         // No text for serach, display list
                         cityAdapter.submitList(weatherList)
-                        cvSearchCity.visibility = View.GONE
+                        binding.cvSearchCity.visibility = View.GONE
                     }
                 }
             }
@@ -169,5 +170,10 @@ class CityListFragment : Fragment() {
         super.onResume()
         binding.etCitySearch.setText("")
         binding.cvSearchCity.visibility = View.GONE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

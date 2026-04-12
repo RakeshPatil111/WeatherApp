@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_cityListFragment_to_detailsFragment"
             app:destination="@id/detailsFragment" />
-        <argument
-            android:name="weather"
-            app:argType="com.example.weatherapp.model.WeatherModel" />
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
@@ -24,6 +21,6 @@
         tools:layout="@layout/fragment_details">
         <argument
             android:name="weather"
-            app:argType="com.example.weatherapp.model.Weather" />
+            app:argType="com.example.weatherapp.model.WeatherModel" />
     </fragment>
 </navigation>

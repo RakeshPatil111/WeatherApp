@@ -6,7 +6,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,12 +18,15 @@ import com.example.weatherapp.model.WeatherModel
 import com.example.weatherapp.repository.WeatherRepository
 import com.example.weatherapp.util.DbWorker
 import com.example.weatherapp.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class MainViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     val repository: WeatherRepository,
     application: Application
 ) :
@@ -62,8 +64,8 @@ class MainViewModel @ViewModelInject constructor(
                 // if so check with model and response
                 is IOException -> weatherLiveData.postValue(Resource.Error("Network Failure"))
                 else -> {
-                    Log.i("Erro :: ", t.localizedMessage)
-                    weatherLiveData.postValue(Resource.Error(t.localizedMessage))
+                    Log.i("Erro :: ", t.localizedMessage ?: "Unknown Error")
+                    weatherLiveData.postValue(Resource.Error(t.localizedMessage ?: "Unknown Error"))
                 }
             }
         }
@@ -98,6 +100,7 @@ class MainViewModel @ViewModelInject constructor(
                 else -> false
             }
         } else {
+            @Suppress("DEPRECATION")
             connectivityManager.activeNetworkInfo?.run {
                 return when (type) {
                     ConnectivityManager.TYPE_WIFI -> true

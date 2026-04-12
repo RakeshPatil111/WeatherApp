@@ -2,13 +2,15 @@ package com.example.weatherapp.util
 
 import android.content.Context
 import android.util.Log
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.weatherapp.repository.db.WeatherDb
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 
-class DbWorker @WorkerInject constructor(
+@HiltWorker
+class DbWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted parameters: WorkerParameters
 ) : Worker(context, parameters) {
@@ -19,7 +21,7 @@ class DbWorker @WorkerInject constructor(
             db.getDAO().deleteAllRows()
             Result.success()
         } catch (throwable: Throwable) {
-            Log.e("Error ::", throwable.localizedMessage)
+            Log.e("Error ::", throwable.localizedMessage ?: "Unknown Error")
             Result.failure()
         }
     }

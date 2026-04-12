@@ -8,7 +8,7 @@ import com.example.weatherapp.viewmodel.MainViewModel
 
 class MainViewModelProvider(val repository: WeatherRepository, val application: Application) :
     ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MainViewModel(repository, application) as T
     }
 }
